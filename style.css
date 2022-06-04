@@ -1,19 +1,22 @@
-@import "compass";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Roboto&display=swap');
 
 body {
   background:black;
+  font-family: 'Roboto', sans-serif;
 }
 
-.CodeMirror-fullscreen {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  height: auto;
-  z-index: 9;
+.resizer {
+    cursor: move;
+    position: relative;
+    display:flex;
+    background: #76F935;
+    width:5px;
+    margin-top:39px;
+    z-index:10;
 }
 
 .navbar {
 	list-style: none;
-	padding: 0 0 0 5;
 	margin: 0;
 	position: relative;
   
@@ -22,7 +25,7 @@ body {
 .navbar-item {
 	float: left;
 	font-weight: bold;
-	color: #fff;
+	color: black;
 	padding: 10px 40px;
 	position: relative;
 	cursor: pointer;
@@ -34,7 +37,7 @@ body {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #58c;
+  background-color: #76F935;
   z-index: -1;
   transform: skew(-45deg);
   transition: all .2s linear;
@@ -42,6 +45,6 @@ body {
 }
 		
 .navbar-item::hover::after {
-  background-color: darken(#58c, 20%);
+  background-color: darken(#76F935, 20%);
   
-/* } */
+}

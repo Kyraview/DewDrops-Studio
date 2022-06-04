@@ -42,6 +42,7 @@ async function tealcompile(){
 }
 
 document.getElementById ("submitButton").addEventListener ("click", tealcompile);
+document.getElementById ("editor").style.height='500px';
 
 
 //deploy second

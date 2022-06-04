@@ -13,28 +13,38 @@
 </head>
 
 <body>
-  <div style='display:flex; flex-direction:column;'>
-  <nav>
-  	<ul class="navbar">
-  		<li class="navbar-item">deudrops</li>
-  		<li class="navbar-item">TEAL</li>
-  	</ul>
-  </nav>
-  <form onsubmit="return false" style='margin-left:;'>
-    <textarea class="CodeMirror-fullscreen" id='editor'></textarea>
-    <button id="submitButton">compile</button>
-  </form
+  <div style='display:flex; height:800px;'>
+    
+  <div style='display:flex; flex-direction:column; width:20%; padding-top:39px;'>
+    <h3 style='color:white; border:white 1px solid; padding:5px; margin:0;'>File Explorer</h3>
+    <div style='display:flex; border:white 1px solid; height:100%;'>
+    </div>
   </div>
-  <p id='hashBox'></p>
-  <br/>
-  <p id='resultBox'></p>
 
-  <script
+  <div class="resizer" id="dragMe"></div>
+    
+  <div style='display:flex; flex-direction:column; width:80%;'>
+    <nav>
+    	<ul class="navbar">
+    		<li class="navbar-item">deudrops</li>
+    		<li class="navbar-item">TEAL</li>
+    	</ul>
+    </nav>
+      
+    <form onsubmit="return false">
+      <textarea id='editor'></textarea>
+      <button id='submitButton'>submit</button>
+    </form>
+  </div>
+
+  </div>
+  
+  <script>
     var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
       lineNumbers: true
     });
-  ></script>
+  </script>
+  <script src='resizeviews.js'></script>
   <script src="script.js"></script>
 </body>
-
 </html>
