@@ -36,14 +36,7 @@ async function tealcompile(){
 
   deployParams.from=compiled.hash;
   deployParams.approvalProgram=compiled.result;
-  
-  document.getElementById('hashBox').innerHTML=compiled.hash;
-  document.getElementById('resultBox').innerHTML=compiled.result;
 }
-
-document.getElementById ("submitButton").addEventListener ("click", tealcompile);
-document.getElementById ("editor").style.height='500px';
-
 
 //deploy second
 async function deploy(){
@@ -59,3 +52,7 @@ async function deploy(){
 }
 
 //call third
+
+
+document.getElementById ("submitButton").addEventListener ("click", tealcompile);
+document.getElementById ("editor").style.height='600px';
