@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@randlabs/myalgo-connect": "^1.2.0"
+  }
+}

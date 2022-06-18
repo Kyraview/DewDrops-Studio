@@ -25,13 +25,14 @@
     
   <div id="container" style='display:flex; flex-direction:column; width:80%; height:100%; border-bottom: 1px white solid;'>
     <nav>
-    	<ul class="navbar">
-    		<li class="navbar-item">dewdrops</li>
-    		<li class="navbar-item">TEAL</li>
+    	<ul class="navbar" style='display:none;' id='langNav'>
+    		<li class="navbar-item" id='dewdropsButton'>dewdrops</li>
+    		<li class="navbar-item" id='tealButton'>TEAL</li>
     	</ul>
 
     	<ul class="navbar">
-        <li style='float:right; margin-right:50px;' class="navbar-item" id='submitButton'>compile</li>
+        <li style='float:right; margin-right:50px;' class="navbar-item" id='compileButton'>compile</li>
+        <li style='float:right; margin-right:50px; display:none;' class="navbar-item" id='deployButton'>deploy</li>
       </ul>
     </nav>
     
@@ -41,15 +42,21 @@
   </div>
   
   <script>
-    let divElement = document.getElementById("container")
-    let height = document.defaultView.getComputedStyle(divElement).height;
-    
-    var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
-      lineNumbers: true,
-      height: 200
-    }).setSize(null,(parseInt(height)-40)+"px")
+    async function initEditor(){
+      let divElement = document.getElementById("container")
+      let height = document.defaultView.getComputedStyle(divElement).height;
+      
+      var editor = await CodeMirror.fromTextArea(document.getElementById('editor'), {
+        lineNumbers: true,
+        height: 200
+      }).setSize(null,(parseInt(height)-40)+"px")
+    }
+
+    initEditor();
   </script>
+
+  <script src="./myalgo.min.js"></script>
   <script src='resizeviews.js'></script>
-  <script src="script.js"></script>
+  <script type='module' src="script.js"></script>
 </body>
 </html>
