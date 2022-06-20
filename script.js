@@ -18,17 +18,17 @@ async function compile(){
   deployParams.approvalProgram=await tealcompile(editor.getValue());
   deployParams.clearProgram=await tealcompile('#pragma version 4\nint 1');
 
-  if(deployParams.approvalProgram['code']){
+  if(deployParams.approvalProgram.hasOwnProperty('message')){
     error += (deployParams.approvalProgram.message+'\n');
   }
-  if(deployParams.clearProgram['code']){
+  if(deployParams.clearProgram.hasOwnProperty('message')){
     error += deployParams.clearProgram.message;
   }
   
   if(error.length===0){
     document.getElementById('langNav').style.display='block';
     document.getElementById('deployButton').style.display='block';
-  }
+  } else{alert(error)}
 }
 
 //deploy contract
@@ -81,9 +81,7 @@ async function tealcompile(data){
     }
     
     compiled = Uint8Array.from(output);
-  } catch {
-    alert('Invalid program');
-  }
+  } catch {}
   return compiled;
 }
 
