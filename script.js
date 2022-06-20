@@ -7,44 +7,62 @@ var deployParams = {from:'',
                    onComplete:0,
                    approvalProgram:null,
                    clearProgram:null,
-                   numLocalInts:10,
-                   numLocalByteSlices:10,
-                   numGlobalInts:10,
-                   numGlobalByteSlices:10}
+                   numLocalInts:5,
+                   numLocalByteSlices:5,
+                   numGlobalInts:5,
+                   numGlobalByteSlices:5}
 
-//compile first
+//compiles from TEAL to Uint8Array machine code
 async function compile(){
-  deployParams.approvalProgram=await tealcompile('int 1');
-  deployParams.clearProgram=await tealcompile('int 1');
+  let error = [];
+  deployParams.approvalProgram=await tealcompile(editor.getValue());
+  deployParams.clearProgram=await tealcompile('#pragma version 4\nint 1');
+
+  if(deployParams.approvalProgram['code']){
+    console.log('evil');
+    error += deployParams.approvalProgram.message;
+  }
+  if(deployParams.clearProgram['code']){
+    error += deployParams.clearProgram.message;
+  }
   
-  document.getElementById('langNav').style.display='block';
-  document.getElementById('deployButton').style.display='block';
-  document.getElementById('compileButton').style.display='none';
+  if(error.length>0){
+    alert(error);
+  } else{
+    document.getElementById('langNav').style.display='block';
+    document.getElementById('deployButton').style.display='block';
+    document.getElementById('compileButton').style.display='none';
+  }
 }
 
-//deploy second
+//deploy contract
 async function deploy(){
   await connect();
+
+  try {
+    let txn = algosdk.makeApplicationCreateTxnFromObject(deployParams);
+    
+    const signedTxn = await myAlgoConnect.signTransaction(txn.toByte());
+    const response = await algodClient.sendRawTransaction(signedTxn.blob).do();
   
-  let txn = algosdk.makeApplicationCreateTxnFromObject(deployParams);
-  
-  const signedTxn = await myAlgoConnect.signTransaction(txn.toByte());
+    console.log(response);
+  } catch(err) {
+    alert(err);
+  }
 }
 
-
-//call third
-
-
+//connect wallet
 async function connect(){
   try {
     const accounts = await myAlgoConnect.connect();
     deployParams.from = accounts[0].address;
     deployParams.suggestedParams = await algodClient.getTransactionParams().do();
-  } catch {console.error('failed to connect wallet')}
+  } catch(err) {alert(err)}
 }
 
-//compile first
+//compile from TEAL to Uint8Array machine code
 async function tealcompile(data){
+  let compiled;
   try{
     let url = 'https://tealcompBackend.deatheye.repl.co/compile-teal';
     
@@ -61,20 +79,29 @@ async function tealcompile(data){
       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify({inputcode:data}) // body data type must match "Content-Type" header
     });
-    const compiled = await res.json();
+    compiled = await res.json();
     
     let output = []
     for(let i = 0; i<Object.keys(compiled.result).length; i++){
       output.push(compiled.result[i]);
     }
     
-    compiled.result = Uint8Array.from(output);
-
-    return compiled.result;
+    compiled = Uint8Array.from(output);
   } catch {
-    alert('compile failed');
+    console.error('TEAL compile failed');
   }
+  return compiled;
 }
+
+//initialize code editor
+let divElement = document.getElementById("container")
+let height = document.defaultView.getComputedStyle(divElement).height;
+      
+var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+  lineNumbers: true,
+  height: 200
+});
+editor.setSize(null,(parseInt(height)-40)+"px");
 
 //listener for editor text change
 function editorChange(){
@@ -85,4 +112,3 @@ function editorChange(){
 
 document.getElementById ("compileButton").addEventListener ("click", compile);
 document.getElementById ("deployButton").addEventListener ("click", deploy);
-document.getElementById ("editor").style.height='600px';

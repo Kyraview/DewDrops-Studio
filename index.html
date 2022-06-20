@@ -40,20 +40,6 @@
   </div>
 
   </div>
-  
-  <script>
-    async function initEditor(){
-      let divElement = document.getElementById("container")
-      let height = document.defaultView.getComputedStyle(divElement).height;
-      
-      var editor = await CodeMirror.fromTextArea(document.getElementById('editor'), {
-        lineNumbers: true,
-        height: 200
-      }).setSize(null,(parseInt(height)-40)+"px")
-    }
-
-    initEditor();
-  </script>
 
   <script src="./myalgo.min.js"></script>
   <script src='resizeviews.js'></script>
