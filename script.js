@@ -83,7 +83,7 @@ async function tealcompile(data){
     
     compiled = Uint8Array.from(output);
   } catch {
-    alert('Invalid syntax');
+    alert('Invalid program');
   }
   return compiled;
 }
