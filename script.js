@@ -28,7 +28,6 @@ async function compile(){
   if(error.length===0){
     document.getElementById('langNav').style.display='block';
     document.getElementById('deployButton').style.display='block';
-    document.getElementById('compileButton').style.display='none';
   }
 }
 
@@ -101,7 +100,6 @@ editor.setValue('//example program\n#pragma version 4\nint 1');
 editor.on("change", function() {
   document.getElementById('langNav').style.display='none';
   document.getElementById('deployButton').style.display='none';
-  document.getElementById('compileButton').style.display='block';
 });
 
 document.getElementById ("compileButton").addEventListener ("click", compile);
