@@ -19,16 +19,13 @@ async function compile(){
   deployParams.clearProgram=await tealcompile('#pragma version 4\nint 1');
 
   if(deployParams.approvalProgram['code']){
-    console.log('evil');
-    error += deployParams.approvalProgram.message;
+    error += (deployParams.approvalProgram.message+'\n');
   }
   if(deployParams.clearProgram['code']){
     error += deployParams.clearProgram.message;
   }
   
-  if(error.length>0){
-    alert(error);
-  } else{
+  if(error.length===0){
     document.getElementById('langNav').style.display='block';
     document.getElementById('deployButton').style.display='block';
     document.getElementById('compileButton').style.display='none';
@@ -45,10 +42,8 @@ async function deploy(){
     const signedTxn = await myAlgoConnect.signTransaction(txn.toByte());
     const response = await algodClient.sendRawTransaction(signedTxn.blob).do();
   
-    console.log(response);
-  } catch(err) {
-    alert(err);
-  }
+    alert('Deploy successful\ntxId: '+response.txId);
+  } catch(err) {alert(err)}
 }
 
 //connect wallet
@@ -88,13 +83,13 @@ async function tealcompile(data){
     
     compiled = Uint8Array.from(output);
   } catch {
-    console.error('TEAL compile failed');
+    console.error('Invalid syntax');
   }
   return compiled;
 }
 
 //initialize code editor
-let divElement = document.getElementById("container")
+let divElement = document.getElementById("container");
 let height = document.defaultView.getComputedStyle(divElement).height;
       
 var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
@@ -102,13 +97,12 @@ var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
   height: 200
 });
 editor.setSize(null,(parseInt(height)-40)+"px");
-
-//listener for editor text change
-function editorChange(){
+editor.setValue('//example program\n#pragma version 4\nint 1');
+editor.on("change", function() {
   document.getElementById('langNav').style.display='none';
   document.getElementById('deployButton').style.display='none';
   document.getElementById('compileButton').style.display='block';
-}
+});
 
 document.getElementById ("compileButton").addEventListener ("click", compile);
 document.getElementById ("deployButton").addEventListener ("click", deploy);
