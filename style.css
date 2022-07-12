@@ -1,58 +1,101 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+#editor {
+  border: 1px solid #eee;
+  height: 100%;
+}
 
 html, body {
   background:#333;
   font-family: 'Roboto', sans-serif;
-  height:99%;
+  height:100%;
+}
+
+#pageDisplay div {
+  display:flex;
+  height:100%;
+  justify-content: center;
+}
+
+#pageDisplay button {
+  width:120px;
+  height:40px;
 }
 
 .resizer {
     cursor: move;
     position: relative;
     display:flex;
-    background: #76F935;
-    width:5px;
-    margin-top:39px;
+    background: #963beb;
+    width:6px;
     z-index:10;
 }
 
-.navbar {
-	list-style: none;
-	margin: 0;
-	position: relative;
-  height: auto;
-  z-index:1;
-  
+.Sidebar {
+  position: relative;
+  background-color: #333;
+  width: 60px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  z-index: 999;
+  -webkit-transition: left 300ms;
+  -o-transition: left 300ms;
+  transition: left 300ms;
+  display: flex;
 }
 
-.navbar-item {
-	float: left;
-	font-weight: bold;
-	color: black;
-	padding: 10px 40px;
-	position: relative;
-	cursor: pointer;
-	margin-left: -1px;
-		
+.Sidebar-Icon {
+  padding: 0;
 }
 
-.navbar-item::after {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #76F935;
-  z-index: -1;
-  transform: skew(-45deg);
-  transition: all .2s linear;
-  
-}
-		
-.navbar-item:hover::after {
-  background-color: darken(#76F935, 20%);
-  
+.Sidebar-Icon li {
+  list-style-type: none;
 }
 
-#editor {
-  border: 1px solid #eee;
-  height: 100%;
+.Sidebar-Icon img {
+  width: 80%;
+  margin: 10px 5px;
+}
+
+.Sidebar-Icon img:hover {
+  filter: brightness(65%);
+}
+
+.topbarButton {
+  background: #963beb;
+  border: 1px solid #963beb;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 16px;
+  margin: 5px;
+  min-height: 35px;
+  outline: 0;
+  padding: 2px 14px;
+  text-align: center;
+  text-rendering: geometricprecision;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+}
+
+.topbarButton:hover,
+.topbarButton:active {
+  filter: brightness(65%);
+  background-position: 0 0;
+}
+
+.topbarButton:hover {
+  background: transparent;
+}
+
+.topbarButton:active {
+  opacity: .5;
 }

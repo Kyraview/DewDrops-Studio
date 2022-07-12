@@ -1,6 +1,5 @@
-const myAlgoConnect = new MyAlgoConnect();
-
-const algodClient = new algosdk.Algodv2("",'https://node.testnet.algoexplorerapi.io', '');
+import TxnVerifer from './txnVerify.mjs';
+const verifier = new TxnVerifer();
 
 var deployParams = {from:'',
                    suggestedParams:{},
@@ -11,6 +10,8 @@ var deployParams = {from:'',
                    numLocalByteSlices:5,
                    numGlobalInts:5,
                    numGlobalByteSlices:5}
+
+var language = 'dewdrops';
 
 //compiles from TEAL to Uint8Array machine code
 async function compile(){
@@ -25,21 +26,31 @@ async function compile(){
     error += deployParams.clearProgram.message;
   }
   
-  if(error.length===0){
-    document.getElementById('langNav').style.display='block';
-    document.getElementById('deployButton').style.display='block';
-  } else{alert(error)}
+  if(error.length!==0){
+    alert(error)
+  } else {
+    console.log('compiled');
+  }
 }
 
 //deploy contract
 async function deploy(){
-  await connect();
-
   try {
+    let algodClientParams = await window.algorand.getAlgodv2Client();
+    let algodClient = new algosdk.Algodv2(algodClientParams);
+    deployParams.from = await window.ethereum.request({
+            method: 'wallet_invokeSnap',
+            params:['npm:algorand',{
+                method: 'getAddress'
+            }]
+    });
+    deployParams.suggestedParams = await algodClient.getTransactionParams().do();
     let txn = algosdk.makeApplicationCreateTxnFromObject(deployParams);
-    
-    const signedTxn = await myAlgoConnect.signTransaction(txn.toByte());
-    const response = await algodClient.sendRawTransaction(signedTxn.blob).do();
+    console.log(verifier.verifyTxn(txn));
+    const signedTxn = await window.algorand.EZsign(txn);
+    console.log('signed\n\n\n\n\n');
+    //const response = await window.algorand.postTxns(signedTxn);
+    //console.log('posted\n\n\n\n\n');
   
     alert('Deploy successful\ntxId: '+response.txId);
   } catch(err) {alert(err)}
@@ -48,10 +59,13 @@ async function deploy(){
 //connect wallet
 async function connect(){
   try {
-    const accounts = await myAlgoConnect.connect();
-    deployParams.from = accounts[0].address;
-    deployParams.suggestedParams = await algodClient.getTransactionParams().do();
-  } catch(err) {alert(err)}
+    window.snapalgo = new SnapAlgo.Wallet();
+    await window.algorand.enable();
+    document.getElementById('connectButton').style.display='none';
+    document.getElementById('deployButton').style.display='block';
+  } catch(err) {
+    alert(err.message);
+  }
 }
 
 //compile from TEAL to Uint8Array machine code
@@ -85,6 +99,22 @@ async function tealcompile(data){
   return compiled;
 }
 
+function changePage(evt) {
+  document.getElementById("pageTitle").innerHTML = evt.currentTarget.myParam[0];
+  document.getElementById('filesPage').style.display='none';
+  document.getElementById('compilePage').style.display='none';
+  document.getElementById('deployPage').style.display='none';
+  document.getElementById(evt.currentTarget.myParam[1]).style.display='flex';
+}
+
+function changeLanguage(evt) {
+  document.getElementById("dewdropsButton").style.filter = 'brightness(65%)';
+  document.getElementById("tealButton").style.filter = 'brightness(65%)';
+  document.getElementById(evt.currentTarget.myParam[0]+"Button").style.filter = 'none';
+  language = evt.currentTarget.myParam[0];
+  console.log('language changed to '+language);
+}
+
 //initialize code editor
 let divElement = document.getElementById("container");
 let height = document.defaultView.getComputedStyle(divElement).height;
@@ -93,12 +123,29 @@ var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
   lineNumbers: true,
   height: 200
 });
-editor.setSize(null,(parseInt(height)-40)+"px");
+editor.setSize(null,(parseInt(height))+"px");
 editor.setValue('//example program\n#pragma version 4\nint 1');
 editor.on("change", function() {
   document.getElementById('langNav').style.display='none';
   document.getElementById('deployButton').style.display='none';
 });
 
-document.getElementById ("compileButton").addEventListener ("click", compile);
-document.getElementById ("deployButton").addEventListener ("click", deploy);
+//page change
+document.getElementById("compilePageButton").addEventListener("click", changePage);
+document.getElementById("compilePageButton").myParam=['Compiler', 'compilePage'];
+document.getElementById("deployPageButton").addEventListener("click", changePage);
+document.getElementById("deployPageButton").myParam=['Deployer', 'deployPage'];
+document.getElementById("filesPageButton").addEventListener("click", changePage);
+document.getElementById("filesPageButton").myParam=['File Explorer', 'filesPage'];
+
+//sidebar action buttons
+document.getElementById("compileButton").addEventListener("click", compile);
+document.getElementById("connectButton").addEventListener("click", connect);
+document.getElementById("deployButton").addEventListener("click", deploy);
+
+//language buttons
+document.getElementById("dewdropsButton").addEventListener("click", changeLanguage);
+document.getElementById("dewdropsButton").myParam=['dewdrops'];
+document.getElementById("tealButton").addEventListener("click", changeLanguage);
+document.getElementById("tealButton").myParam=['teal'];
+document.getElementById("tealButton").style.filter = 'brightness(65%)';

@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@randlabs/myalgo-connect": "^1.2.0"
+    "@randlabs/myalgo-connect": "^1.2.0",
+    "snapalgo-sdk": "^1.0.0"
   }
 }
