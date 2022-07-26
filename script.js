@@ -11,10 +11,11 @@ var deployParams = {from:'',
                    numGlobalInts:5,
                    numGlobalByteSlices:5}
 
-var language = 'dewdrops';
+var language = 'teal';
 
 //compiles from TEAL to Uint8Array machine code
 async function compile(){
+  document.getElementById("compileInfo").innerHTML = "";
   let error = [];
   deployParams.approvalProgram=await tealcompile(editor.getValue());
   deployParams.clearProgram=await tealcompile('#pragma version 4\nint 1');
@@ -29,7 +30,11 @@ async function compile(){
   if(error.length!==0){
     alert(error)
   } else {
-    console.log('compiled');
+    let compilePage = document.getElementById("compilePage")
+    let info = document.getElementById("compileInfo")
+    info.style = "color:white; text-align: center; padding: 30px 0 0 0;"
+    info.innerHTML = "Compiled successfully"
+    
   }
 }
 
@@ -46,14 +51,12 @@ async function deploy(){
     });
     deployParams.suggestedParams = await algodClient.getTransactionParams().do();
     let txn = algosdk.makeApplicationCreateTxnFromObject(deployParams);
-    console.log(verifier.verifyTxn(txn));
-    const signedTxn = await window.algorand.EZsign(txn);
-    console.log('signed\n\n\n\n\n');
-    //const response = await window.algorand.postTxns(signedTxn);
-    //console.log('posted\n\n\n\n\n');
-  
-    alert('Deploy successful\ntxId: '+response.txId);
-  } catch(err) {alert(err)}
+    const response = await window.algorand.EZsignAndPost(txn);
+    console.log(response)
+    if (typeof response === 'string' && response.length === 52){
+      alert('Deploy successful\ntxId: '+response);
+    }
+  } catch(err) {alert(err.message)}
 }
 
 //connect wallet
@@ -148,4 +151,4 @@ document.getElementById("dewdropsButton").addEventListener("click", changeLangua
 document.getElementById("dewdropsButton").myParam=['dewdrops'];
 document.getElementById("tealButton").addEventListener("click", changeLanguage);
 document.getElementById("tealButton").myParam=['teal'];
-document.getElementById("tealButton").style.filter = 'brightness(65%)';
+document.getElementById("dewdropsButton").style.filter = 'brightness(65%)';

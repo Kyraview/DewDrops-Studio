@@ -32,26 +32,28 @@
     </ul>
   </div>
     
-  <div style='display:flex; flex-direction:column; width:20%; background:#333; border:white 1px solid;' id='pageDisplay'>
+  <div style='display:flex; flex-direction:column; width:20%; background:#333; border-left:white 1px solid;' id='pageDisplay'>
     <h3 id='pageTitle' style='color:white; padding:5px; margin:0 0 50px 0; border-bottom:white 1px solid;'>File Explorer</h3>
     <div id='filesPage' style='color:white;'>
-      <h1 style='padding:10px; font-size: 25px;'>coming soon</h1>
+      <h1 style='padding:10px; font-size: 25px;'>Example</h1>
     </div>
-    <div id='compilePage' style='display:none;'>
-      <button class='topbarButton' id='compileButton'>compile</button>
+    <div id='compilePage' style='display:none; flex-direction: column; justify-content: start;'>
+      <button style="margin-left: auto; margin-right: auto;"class='topbarButton' id='compileButton'>compile</button>
+      <p id="compileInfo"></p>
     </div>
     <div id='deployPage' style='display:none;'>
       <button class='topbarButton' id='connectButton'>connect</button>
-      <button id='deployButton' style='display:none;'>deploy</button>
+      <button class='topbarButton' id='deployButton' style='display:none;'>deploy</button>
     </div>
   </div>
 
   <div  class="resizer" id="dragMe"></div>
     
   <div id="container" style='display:flex; flex-direction:column; width:80%; height:100%; border-bottom: 1px white solid; background:#333;'>
-    <div style='display:flex;'>
-      <button class='topbarButton' id='dewdropsButton'>DewDrops</button>
+    <div style='display:flex; justify-content: right;'>
       <button class='topbarButton' id='tealButton'>TEAL</button>
+      <button style='margin-right: 40px;' class='topbarButton' id='dewdropsButton'>DewDrops</button>
+      
     </div>
     <textarea id='editor'></textarea>
   </div>
